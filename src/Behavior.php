@@ -20,7 +20,7 @@ class Behavior extends base\Behavior
     public $user = 'user';
 
     /** @var string|array|web\Request */
-    public $request;
+    public $request = 'request';
 
     /** @var string|array|caching\Cache */
     public $cache = 'cache';
