@@ -77,7 +77,7 @@ class Behavior extends base\Behavior
             return;
         };
 
-        $this->create($userId, $userAgent, $userId);
+        $this->create($userId, $userAgent, $ip);
         $this->cache->set(compact('userAgent', 'userId', 'ip'), 1, 60);
     }
 
