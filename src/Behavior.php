@@ -20,7 +20,7 @@ class Behavior extends base\Behavior
     public $user = 'user';
 
     /** @var string|array|web\Request */
-    public $request;
+    public $request = 'request';
 
     /** @var string|array|caching\Cache */
     public $cache = 'cache';
@@ -77,7 +77,7 @@ class Behavior extends base\Behavior
             return;
         };
 
-        $this->create($userId, $userAgent, $userId);
+        $this->create($userId, $userAgent, $ip);
         $this->cache->set(compact('userAgent', 'userId', 'ip'), 1, 60);
     }
 
