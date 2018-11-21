@@ -43,7 +43,17 @@ class Record extends db\ActiveRecord
             [['user_id',], 'integer', 'min' => 1,],
             [['user_agent',], 'string',],
             [['ip',], 'ip',],
-            [['user_id', 'user_agent', 'ip',], 'unique',],
+            [
+                ['user_id',],
+                'unique',
+                'filter' => function (db\ActiveQuery $query): db\ActiveQuery {
+                    return $query
+                        ->andWhere(['=', 'user_agent', $this->user_agent,])
+                        ->andWhere(['=', 'ip', $this->ip,]);
+                },
+                'skipOnEmpty' => true,
+                'skipOnError' => true,
+            ],
         ];
     }
 }
