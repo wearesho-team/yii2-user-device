@@ -28,7 +28,7 @@ class Behavior extends base\Behavior
     public function events(): array
     {
         return [
-            base\Application::EVENT_BEFORE_REQUEST => 'storeUserDevice',
+            base\Application::EVENT_AFTER_REQUEST => 'storeUserDevice',
         ];
     }
 
