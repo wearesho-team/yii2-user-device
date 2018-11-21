@@ -41,7 +41,7 @@ class Record extends db\ActiveRecord
         return [
             [['user_id', 'user_agent', 'ip',], 'required',],
             [['user_id',], 'integer', 'min' => 1,],
-            [['user_agnet',], 'string',],
+            [['user_agent',], 'string',],
             [['ip',], 'ip',],
             [['user_id', 'user_agent', 'ip',], 'unique',],
         ];
