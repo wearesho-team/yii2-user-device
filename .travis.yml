@@ -9,8 +9,8 @@ php:
     - 7.3
 
 env:
-    - DB_TYPE=mysql DB_HOST=127.0.0.1 DB_NAME=userdevice DB_USER=root DB_PASS=
-    - DB_TYPE=pgsql DB_HOST=localhost DB_NAME=userdevice DB_USER=postgres DB_PASS=root
+    - DB_TYPE=mysql DB_HOST=127.0.0.1 DB_NAME=userdevice DB_PORT=3306 DB_USERNAME=root DB_PASSWORD=
+    - DB_TYPE=pgsql DB_HOST=localhost DB_NAME=userdevice DB_PORT=5432 DB_USERNAME=postgres DB_PASSWORD=root
 
 before_script:
     - travis_retry composer self-update

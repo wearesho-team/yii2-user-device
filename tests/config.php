@@ -4,10 +4,10 @@ use yii\helpers\ArrayHelper;
 use yii\db\Connection;
 
 $localConfig = __DIR__ . DIRECTORY_SEPARATOR . 'config-local.php';
-$dbType = getenv('DB_TYPE');
-$host = getenv('DB_HOST');
-$name = getenv("DB_NAME");
-$port = getenv("DB_PORT");
+$dbType = getenv('DB_TYPE') ?: 'pgsql';
+$host = getenv('DB_HOST') ?: 'localhost';
+$name = getenv("DB_NAME") ?: 'userdevice';
+$port = getenv("DB_PORT") ?: '5432';
 $dsn = "{$dbType}:host={$host};dbname={$name};port={$port}";
 $config = [
     'id' => 'yii2-user-device',
@@ -16,7 +16,7 @@ $config = [
         'db' => [
             'class' => Connection::class,
             'dsn' => $dsn,
-            'username' => getenv("DB_USERNAME"),
+            'username' => getenv("DB_USERNAME") ?: 'postgres',
             'password' => getenv("DB_PASSWORD") ?: null,
         ],
     ],
