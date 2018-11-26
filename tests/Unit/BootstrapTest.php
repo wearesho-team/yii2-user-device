@@ -3,6 +3,12 @@
 namespace Wearesho\Yii\UserDevice\Tests\Unit;
 
 use Wearesho\Yii\UserDevice;
+use yii\caching\ArrayCache;
+use yii\caching\Cache;
+use yii\caching\DbCache;
+use yii\rbac\PhpManager;
+use yii\web\Application;
+use yii\web\User;
 
 /**
  * Class BootstrapTest
@@ -29,11 +35,11 @@ class BootstrapTest extends UserDevice\Tests\TestCase
     public function testBootstrap(): void
     {
         $bootstrap = new UserDevice\Bootstrap();
+        \Yii::$container->set('cache', ArrayCache::class);
         $bootstrap->bootstrap($this->app);
         $this->assertEquals(
             \Yii::getAlias('@vendor/wearesho-team/yii2-user-device/src'),
             \Yii::getAlias('@Wearesho/Yii/UserDevice')
         );
-        $this->assertArrayHasKey('migrate', $this->app->controllerMap);
     }
 }

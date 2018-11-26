@@ -4,6 +4,7 @@ namespace Wearesho\Yii\UserDevice\Tests\Unit;
 
 use Wearesho\Yii\UserDevice\Record;
 use Wearesho\Yii\UserDevice\Tests\TestCase;
+use yii\db\BaseActiveRecord;
 
 /**
  * Class RecordTest
@@ -45,5 +46,28 @@ class RecordTest extends TestCase
         $this->record->user_agent = 'test_user_agent';
 
         $this->assertTrue($this->record->validate('user_agent'));
+    }
+
+    public function testValidateIp(): void
+    {
+        $this->assertFalse($this->record->validate('ip'));
+
+        $this->record->ip = '3ffe:1900:4545:3:200:f8ff:fe21:67cf'; // fake ipv4
+
+        $this->assertTrue($this->record->validate('ip'));
+    }
+
+    public function testBehaviors(): void
+    {
+        $this->record = new Record([
+            'user_agent' => 'test_user_agent',
+            'user_id' => mt_rand(1, 100),
+            'ip' => '3ffe:1900:4545:3:200:f8ff:fe21:67cf'
+        ]);
+        $this->record->trigger(BaseActiveRecord::EVENT_BEFORE_INSERT);
+        $this->assertNotEmpty($this->record->created_at);
+        $this->assertNotEmpty($this->record->updated_at);
+
+        $this->record->save();
     }
 }

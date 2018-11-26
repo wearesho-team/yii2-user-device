@@ -8,7 +8,9 @@ $host = getenv('DB_HOST');
 $name = getenv("DB_NAME");
 $port = getenv("DB_PORT");
 $dsn = "pgsql:host={$host};dbname={$name};port={$port}";
+$_SERVER['REMOTE_ADDR'] = '3ffe:1900:4545:3:200:f8ff:fe21:67cf';
 $config = [
+    'class' => \yii\web\Application::class,
     'id' => 'yii2-user-device',
     'basePath' => dirname(__DIR__),
     'components' => [
@@ -17,6 +19,14 @@ $config = [
             'dsn' => $dsn,
             'username' => getenv("DB_USERNAME"),
             'password' => getenv("DB_PASSWORD") ?: null,
+        ],
+        'user' => [
+            'class' => \yii\web\User::class,
+            'identityClass' => \Wearesho\Yii\UserDevice\Tests\Mocks\UserMock::class,
+            'enableSession' => false,
+        ],
+        'request' => [
+            'cookieValidationKey' => 'test',
         ],
     ],
 ];
