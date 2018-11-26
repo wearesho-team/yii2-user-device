@@ -8,15 +8,6 @@ php:
     - 7.2
     - 7.3
 
-addons:
-  postgresql: "9.4"
-  apt:
-      sources:
-          - mysql-5.7-trusty
-      packages:
-          - mysql-server
-          - mysql-client
-
 env:
     - DB_TYPE=mysql DB_HOST=127.0.0.1 DB_NAME=userdevice DB_USER=root DB_PASS=
     - DB_TYPE=pgsql DB_HOST=localhost DB_NAME=userdevice DB_USER=postgres DB_PASS=root
