@@ -37,4 +37,13 @@ class RecordTest extends TestCase
 
         $this->assertTrue($this->record->validate('user_id'));
     }
+
+    public function testValidateUserAgent(): void
+    {
+        $this->assertFalse($this->record->validate('user_agent'));
+
+        $this->record->user_agent = 'test_user_agent';
+
+        $this->assertTrue($this->record->validate('user_agent'));
+    }
 }
