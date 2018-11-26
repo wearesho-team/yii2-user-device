@@ -11,20 +11,30 @@ use Wearesho\Yii\UserDevice\Tests\TestCase;
  */
 class RecordTest extends TestCase
 {
-    public function fixtures(): array
+    /** @var Record */
+    protected $record;
+
+    protected function setUp()
     {
-        return [
-            Record::class,
-        ];
+        parent::setUp();
+
+        $this->record = new Record();
     }
 
-    public function testFind(): void
+    public function testValidateEmptyRecord(): void
     {
-        $userDevice = Record::find()->one();
+        $this->assertFalse($this->record->validate());
+        $this->assertArrayHasKey('user_id', $this->record->errors);
+        $this->assertArrayHasKey('user_agent', $this->record->errors);
+        $this->assertArrayHasKey('ip', $this->record->errors);
+    }
 
-        $this->assertInstanceOf(Record::class, $userDevice);
-        $this->seeRecord($userDevice, [
-            'id' => $userDevice->id,
-        ]);
+    public function testValidateUserId(): void
+    {
+        $this->assertFalse($this->record->validate('user_id'));
+
+        $this->record->user_id = mt_rand(1, 100);
+
+        $this->assertTrue($this->record->validate('user_id'));
     }
 }
