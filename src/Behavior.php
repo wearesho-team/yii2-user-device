@@ -28,7 +28,7 @@ class Behavior extends base\Behavior
     public function events(): array
     {
         return [
-            base\Application::EVENT_BEFORE_REQUEST => 'storeUserDevice',
+            base\Application::EVENT_AFTER_REQUEST => 'storeUserDevice',
         ];
     }
 
@@ -94,9 +94,8 @@ class Behavior extends base\Behavior
             $this->update($userId, $userAgent, $ip);
             return;
         }
-        \Yii::debug("Created device info {$record->id} for user {$userId}", static::class);
 
-        return;
+        \Yii::debug("Created device info {$record->id} for user {$userId}", static::class);
     }
 
     protected function update(int $userId, string $userAgent, string $ip): void
@@ -112,7 +111,7 @@ class Behavior extends base\Behavior
 
         if ($count !== 0) {
             \Yii::debug("Updated info for user {$userId}", static::class);
-            return null;
+            return;
         }
 
         $this->create($userId, $userAgent, $ip);
