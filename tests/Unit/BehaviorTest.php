@@ -13,18 +13,11 @@ use yii\web;
  */
 class BehaviorTest extends UserDevice\Tests\TestCase
 {
-    protected const IP = '3ffe:1900:4545:3:200:f8ff:fe21:67cf';
-    protected const AGENT = 'agent';
+    protected const FAKE_IP = '3ffe:1900:4545:3:200:f8ff:fe21:67cf';
+    protected const FAKE_AGENT = 'agent';
 
     /** @var TestLogger */
     protected $testLogger;
-
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-
-        \Yii::$container->set('cache', ArrayCache::class);
-    }
 
     protected function setUp()
     {
@@ -45,13 +38,13 @@ class BehaviorTest extends UserDevice\Tests\TestCase
 
     public function testSuccessBehavior(): void
     {
-        \Yii::$app->request->headers->set('User-Agent', static::AGENT);
-        \Yii::$app->request->headers->set('X-Forwarded-For', static::IP);
+        \Yii::$app->request->headers->set('User-Agent', static::FAKE_AGENT);
+        \Yii::$app->request->headers->set('X-Forwarded-For', static::FAKE_IP);
         $this->createUser()->trigger(web\Application::EVENT_AFTER_REQUEST);
 
-        $record = UserDevice\Record::find()->where(['=', 'ip', static::IP])->one();
+        $record = UserDevice\Record::find()->where(['=', 'ip', static::FAKE_IP])->one();
         $this->assertNotNull($record);
-        $this->assertEquals(static::AGENT, $record->user_agent);
+        $this->assertEquals(static::FAKE_AGENT, $record->user_agent);
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertEquals(1, $record->delete());
     }
@@ -130,14 +123,26 @@ class BehaviorTest extends UserDevice\Tests\TestCase
     public function testEmptyUserAgent(): void
     {
         $user = $this->createUser();
-        $behavior = $this->createBehavior($user);
+        $user->trigger(web\Application::EVENT_AFTER_REQUEST);
 
-        $behavior->storeUserDevice();
-
-        $this->assertRegExp("/User '[0-9]+' logged in from . Session not enabled./", $this->testLogger->log[0][0]);
+        $this->assertRegExp("/^User '[0-9]+' logged in from . Session not enabled.$/", $this->testLogger->log[0][0]);
         $this->assertEquals(4, $this->testLogger->log[0][1]);
         $this->assertEquals("yii\web\User::login", $this->testLogger->log[0][2]);
-        $this->assertRegExp("/Missing user agent header in request for user [0-9]+/", $this->testLogger->log[1][0]);
+        $this->assertRegExp("/^Missing user agent header in request for user [0-9]+$/", $this->testLogger->log[1][0]);
+        $this->assertEquals(8, $this->testLogger->log[1][1]);
+        $this->assertEquals("Wearesho\Yii\UserDevice\Behavior", $this->testLogger->log[1][2]);
+    }
+
+    public function testEmptyUserIP(): void
+    {
+        $user = $this->createUser();
+        \Yii::$app->request->headers->set('User-Agent', static::FAKE_AGENT);
+        $user->trigger(web\Application::EVENT_AFTER_REQUEST);
+
+        $this->assertRegExp("/^User '[0-9]+' logged in from . Session not enabled.$/", $this->testLogger->log[0][0]);
+        $this->assertEquals(4, $this->testLogger->log[0][1]);
+        $this->assertEquals("yii\web\User::login", $this->testLogger->log[0][2]);
+        $this->assertRegExp("/^Missing IP info for user [0-9]+$/", $this->testLogger->log[1][0]);
         $this->assertEquals(8, $this->testLogger->log[1][1]);
         $this->assertEquals("Wearesho\Yii\UserDevice\Behavior", $this->testLogger->log[1][2]);
     }
