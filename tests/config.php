@@ -8,7 +8,6 @@ $host = getenv('DB_HOST');
 $name = getenv("DB_NAME");
 $port = getenv("DB_PORT");
 $dsn = "pgsql:host={$host};dbname={$name};port={$port}";
-\Yii::$container->setSingleton('cache', \yii\caching\ArrayCache::class);
 $config = [
     'class' => \yii\web\Application::class,
     'id' => 'yii2-user-device',
@@ -28,6 +27,9 @@ $config = [
         'request' => [
             'cookieValidationKey' => 'test',
         ],
+        'cache' => [
+            'class' => \yii\caching\ArrayCache::class
+        ]
     ],
 ];
 

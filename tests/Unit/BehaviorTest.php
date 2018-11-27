@@ -174,7 +174,7 @@ class BehaviorTest extends UserDevice\Tests\TestCase
         \Yii::$app->request->headers->set('X-Forwarded-For', static::FAKE_IP);
         $user->trigger(web\Application::EVENT_AFTER_REQUEST);
         /** @noinspection PhpUnhandledExceptionInspection */
-        \Yii::$container->get('cache')->flush();
+        \Yii::$app->cache->flush();
         $user->trigger(web\Application::EVENT_AFTER_REQUEST);
 
         $this->assertRegExp("/^Updated info for user [0-9]+$/", $this->testLogger->log[21][0]);
@@ -189,7 +189,7 @@ class BehaviorTest extends UserDevice\Tests\TestCase
         \Yii::$app->request->headers->set('X-Forwarded-For', static::FAKE_IP);
         $user->trigger(web\Application::EVENT_AFTER_REQUEST);
         /** @noinspection PhpUnhandledExceptionInspection */
-        \Yii::$container->get('cache')->flush();
+        \Yii::$app->cache->flush();
         \yii\base\Event::on(
             UserDevice\Record::class,
             \yii\db\ActiveRecord::EVENT_AFTER_VALIDATE,
