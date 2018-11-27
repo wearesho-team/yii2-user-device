@@ -8,7 +8,12 @@ php:
     - 7.3
 
 env:
-    - DB_TYPE=pgsql DB_HOST=localhost DB_NAME=userdevice DB_PORT=5432 DB_USERNAME=postgres DB_PASSWORD=root
+    - DB_TYPE=pgsql
+      DB_HOST=localhost
+      DB_NAME=userdevice
+      DB_PORT=5432
+      DB_USERNAME=postgres
+      DB_PASSWORD=root
 
 before_script:
     - travis_retry composer self-update
@@ -16,8 +21,8 @@ before_script:
     - psql -c 'CREATE DATABASE userdevice;'
 
 script:
-    - ./vendor/bin/phpcs --standard=PSR2 ./src ./tests
-    - ./vendor/bin/phpunit --coverage-clover=coverage.xml
+    - travis_retry composer lint
+    - travis_retry composer cove
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
