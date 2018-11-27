@@ -22,7 +22,7 @@ before_script:
 
 script:
     - travis_retry composer lint
-    - travis_retry composer cove
+    - travis_retry composer cover
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
