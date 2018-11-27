@@ -17,7 +17,7 @@ class BehaviorTest extends UserDevice\Tests\TestCase
     protected const AGENT = 'agent';
 
     /** @var TestLogger */
-    protected $log;
+    protected $testLogger;
 
     public static function setUpBeforeClass()
     {
@@ -30,7 +30,8 @@ class BehaviorTest extends UserDevice\Tests\TestCase
     {
         parent::setUp();
 
-        $logger = new class extends TestLogger {
+        $this->testLogger = new class extends TestLogger
+        {
             /** @var array */
             public $log;
 
@@ -39,21 +40,14 @@ class BehaviorTest extends UserDevice\Tests\TestCase
                 $this->log[] = [$message, $level, $category];
             }
         };
-        \Yii::setLogger($logger);
+        \Yii::setLogger($this->testLogger);
     }
 
     public function testSuccessBehavior(): void
     {
-        $user = new UserDevice\Tests\Mocks\UserMock(mt_rand());
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $this->loginAs($user);
-
-        /** @var UserDevice\Behavior $behavior */
-        $behavior = $this->createBehavior($user);
-        $behavior->request->headers->set('User-Agent', static::AGENT);
-        $behavior->request->headers->set('X-Forwarded-For', static::IP);
-
-        $behavior->storeUserDevice();
+        \Yii::$app->request->headers->set('User-Agent', static::AGENT);
+        \Yii::$app->request->headers->set('X-Forwarded-For', static::IP);
+        $this->createUser()->trigger(web\Application::EVENT_AFTER_REQUEST);
 
         $record = UserDevice\Record::find()->where(['=', 'ip', static::IP])->one();
         $this->assertNotNull($record);
@@ -112,13 +106,10 @@ class BehaviorTest extends UserDevice\Tests\TestCase
         };
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->loginAs($user);
-
-        /** @var UserDevice\Behavior $behavior */
         $behavior = $this->createBehavior($user);
         $behavior->storeUserDevice();
 
         $this->assertNull($user->id);
-
         $this->assertArraySubset(
             [
                 [
@@ -132,15 +123,42 @@ class BehaviorTest extends UserDevice\Tests\TestCase
                     "Wearesho\Yii\UserDevice\Behavior"
                 ]
             ],
-            \Yii::getLogger()->log
+            $this->testLogger->log
         );
     }
 
-    protected function createBehavior($user)
+    public function testEmptyUserAgent(): void
+    {
+        $user = $this->createUser();
+        $behavior = $this->createBehavior($user);
+
+        $behavior->storeUserDevice();
+
+        $this->assertRegExp("/User '[0-9]+' logged in from . Session not enabled./", $this->testLogger->log[0][0]);
+        $this->assertEquals(4, $this->testLogger->log[0][1]);
+        $this->assertEquals("yii\web\User::login", $this->testLogger->log[0][2]);
+        $this->assertRegExp("/Missing user agent header in request for user [0-9]+/", $this->testLogger->log[1][0]);
+        $this->assertEquals(8, $this->testLogger->log[1][1]);
+        $this->assertEquals("Wearesho\Yii\UserDevice\Behavior", $this->testLogger->log[1][2]);
+    }
+
+    protected function createBehavior($user): UserDevice\Behavior
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return \Yii::$container->get(UserDevice\Behavior::class, [
+        /** @var UserDevice\Behavior $behavior */
+        $behavior = \Yii::$container->get(UserDevice\Behavior::class, [
             'user' => $user,
         ]);
+
+        return $behavior;
+    }
+
+    protected function createUser(): UserDevice\Tests\Mocks\UserMock
+    {
+        $user = new UserDevice\Tests\Mocks\UserMock(mt_rand());
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->loginAs($user);
+
+        return $user;
     }
 }
