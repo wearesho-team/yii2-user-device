@@ -3,7 +3,6 @@
 namespace Wearesho\Yii\UserDevice\Tests\Unit;
 
 use Wearesho\Yii\UserDevice;
-use yii\caching\ArrayCache;
 use yii\phpunit\TestLogger;
 use yii\web;
 
@@ -14,6 +13,7 @@ use yii\web;
 class BehaviorTest extends UserDevice\Tests\TestCase
 {
     protected const FAKE_IP = '3ffe:1900:4545:3:200:f8ff:fe21:67cf';
+    protected const ANOTHER_IP = '107.194.214.144';
     protected const FAKE_AGENT = 'agent';
 
     /** @var TestLogger */
@@ -145,6 +145,39 @@ class BehaviorTest extends UserDevice\Tests\TestCase
         $this->assertRegExp("/^Missing IP info for user [0-9]+$/", $this->testLogger->log[1][0]);
         $this->assertEquals(8, $this->testLogger->log[1][1]);
         $this->assertEquals("Wearesho\Yii\UserDevice\Behavior", $this->testLogger->log[1][2]);
+    }
+
+    public function testSkipUpdate(): void
+    {
+        $user = $this->createUser();
+        \Yii::$app->request->headers->set('User-Agent', static::FAKE_AGENT);
+        \Yii::$app->request->headers->set('X-Forwarded-For', static::FAKE_IP);
+        $user->trigger(web\Application::EVENT_AFTER_REQUEST);
+        $user->trigger(web\Application::EVENT_AFTER_REQUEST);
+
+        $this->assertArraySubset(
+            [
+                "Skipping updating user info",
+                8,
+                "Wearesho\Yii\UserDevice\Behavior"
+            ],
+            $this->testLogger->log[14]
+        );
+    }
+
+    public function testUpdateExistDevice(): void
+    {
+        $user = $this->createUser();
+        \Yii::$app->request->headers->set('User-Agent', static::FAKE_AGENT);
+        \Yii::$app->request->headers->set('X-Forwarded-For', static::FAKE_IP);
+        $user->trigger(web\Application::EVENT_AFTER_REQUEST);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        \Yii::$container->get('cache')->flush();
+        $user->trigger(web\Application::EVENT_AFTER_REQUEST);
+
+        $this->assertRegExp("/^Updated info for user [0-9]+$/", $this->testLogger->log[21][0]);
+        $this->assertEquals(8, $this->testLogger->log[21][1]);
+        $this->assertEquals("Wearesho\Yii\UserDevice\Behavior", $this->testLogger->log[21][2]);
     }
 
     protected function createBehavior($user): UserDevice\Behavior

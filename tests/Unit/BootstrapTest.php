@@ -3,11 +3,6 @@
 namespace Wearesho\Yii\UserDevice\Tests\Unit;
 
 use Wearesho\Yii\UserDevice;
-use yii\caching\ArrayCache;
-use yii\caching\Cache;
-use yii\caching\DbCache;
-use yii\rbac\PhpManager;
-use yii\web\Application;
 use yii\web\User;
 
 /**
@@ -45,13 +40,14 @@ class BootstrapTest extends UserDevice\Tests\TestCase
     public function testBootstrapConsoleWeb(): void
     {
         $bootstrap = new UserDevice\Bootstrap();
+        /** @noinspection PhpUnhandledExceptionInspection */
         $bootstrap->bootstrap(new \yii\console\Application([
             'id' => 'yii2-user-device',
             'basePath' => dirname(__DIR__),
             'components' => [
                 'user' => [
-                    'class' => \yii\web\User::class,
-                    'identityClass' => \Wearesho\Yii\UserDevice\Tests\Mocks\UserMock::class,
+                    'class' => User::class,
+                    'identityClass' => UserDevice\Tests\Mocks\UserMock::class,
                     'enableSession' => false,
                 ],
                 'request' => [
