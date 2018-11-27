@@ -8,6 +8,8 @@ use yii\web\User;
 /**
  * Class BootstrapTest
  * @package Wearesho\Yii\UserDevice\Tests\Unit
+ * @coversDefaultClass \Wearesho\Yii\UserDevice\Bootstrap
+ * @internal
  */
 class BootstrapTest extends UserDevice\Tests\TestCase
 {

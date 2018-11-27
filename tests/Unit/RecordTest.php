@@ -9,6 +9,8 @@ use yii\db\BaseActiveRecord;
 /**
  * Class RecordTest
  * @package Wearesho\Yii\UserDevice\Tests\Unit
+ * @coversDefaultClass \Wearesho\Yii\UserDevice\Record
+ * @internal
  */
 class RecordTest extends TestCase
 {

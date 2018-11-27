@@ -8,6 +8,7 @@ use yii\phpunit\MigrateFixture;
 /**
  * Class TestCase
  * @package Wearesho\Yii\UserDevice\Tests
+ * @internal
  */
 class TestCase extends \yii\phpunit\TestCase
 {

@@ -9,6 +9,8 @@ use yii\web;
 /**
  * Class BehaviorTest
  * @package Wearesho\Yii\UserDevice\Tests\Unit
+ * @coversDefaultClass \Wearesho\Yii\UserDevice\Behavior
+ * @internal
  */
 class BehaviorTest extends UserDevice\Tests\TestCase
 {
