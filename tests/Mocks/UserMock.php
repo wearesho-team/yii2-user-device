@@ -25,7 +25,9 @@ class UserMock extends web\User implements web\IdentityInterface
     {
         return [
             'store-device' => [
-                'class' => Behavior::class
+                'class' => Behavior::class,
+                'user' => $this,
+                'request' => \Yii::$app->request,
             ],
         ];
     }
