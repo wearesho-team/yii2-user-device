@@ -180,6 +180,42 @@ class BehaviorTest extends UserDevice\Tests\TestCase
         $this->assertEquals("Wearesho\Yii\UserDevice\Behavior", $this->testLogger->log[21][2]);
     }
 
+    public function testFailedUpdate(): void
+    {
+        $user = $this->createUser();
+        \Yii::$app->request->headers->set('User-Agent', static::FAKE_AGENT);
+        \Yii::$app->request->headers->set('X-Forwarded-For', static::FAKE_IP);
+        $user->trigger(web\Application::EVENT_AFTER_REQUEST);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        \Yii::$container->get('cache')->flush();
+        \yii\base\Event::on(
+            UserDevice\Record::class,
+            \yii\db\ActiveRecord::EVENT_AFTER_VALIDATE,
+            function () use ($user) {
+                $row = UserDevice\Record::find()
+                    ->andWhere(['=', 'user_id', $user->id,])
+                    ->andWhere(['=', 'user_agent', static::FAKE_AGENT,])
+                    ->andWhere(['=', 'ip', static::FAKE_IP,])
+                    ->one();
+
+                if (!$row) {
+                    return;
+                }
+                $this->assertEquals(1, $row->delete());
+            }
+        );
+
+        $user->trigger(web\Application::EVENT_AFTER_REQUEST);
+        $this->assertInstanceOf(
+            UserDevice\Record::class,
+            UserDevice\Record::find()
+                ->andWhere(['=', 'user_id', $user->id,])
+                ->andWhere(['=', 'user_agent', static::FAKE_AGENT,])
+                ->andWhere(['=', 'ip', static::FAKE_IP,])
+                ->one()
+        );
+    }
+
     protected function createBehavior($user): UserDevice\Behavior
     {
         /** @noinspection PhpUnhandledExceptionInspection */
