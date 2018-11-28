@@ -25,7 +25,7 @@ class M181121080429CreateUserDeviceTable extends Migration
 
         $this->createIndex('user_device_unique', 'user_device', [
             'user_id',
-            'user_agent(256)',
+            $this->db->getDriverName() === 'mysql' ? 'user_agent(256)' : 'user_agent',
             'ip',
         ]);
     }
