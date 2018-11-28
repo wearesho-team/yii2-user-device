@@ -169,17 +169,20 @@ class BehaviorTest extends UserDevice\Tests\TestCase
 
     public function testUpdateExistDevice(): void
     {
+        \Yii::$app->db->queryBuilder->truncateTable(UserDevice\Record::tableName());
         $user = $this->createUser();
         \Yii::$app->request->headers->set('User-Agent', static::FAKE_AGENT);
         \Yii::$app->request->headers->set('X-Forwarded-For', static::FAKE_IP);
         $user->trigger(web\Application::EVENT_AFTER_REQUEST);
         /** @noinspection PhpUnhandledExceptionInspection */
         \Yii::$app->cache->flush();
+        $first_date = UserDevice\Record::find()->andWhere(['=', 'ip', static::FAKE_IP])->one()->updated_at;
+        sleep(2);
         $user->trigger(web\Application::EVENT_AFTER_REQUEST);
-
-        $this->assertRegExp("/^Updated info for user [0-9]+$/", $this->testLogger->log[21][0]);
-        $this->assertEquals(8, $this->testLogger->log[21][1]);
-        $this->assertEquals("Wearesho\Yii\UserDevice\Behavior", $this->testLogger->log[21][2]);
+        $this->assertGreaterThan(
+            $first_date,
+            UserDevice\Record::find()->andWhere(['=', 'ip', static::FAKE_IP])->one()->updated_at
+        );
     }
 
     public function testFailedUpdate(): void
