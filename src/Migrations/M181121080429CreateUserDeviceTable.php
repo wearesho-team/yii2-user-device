@@ -17,7 +17,7 @@ class M181121080429CreateUserDeviceTable extends Migration
         $this->createTable('user_device', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->unsigned()->notNull(),
-            'user_agent' => $this->text()->notNull(),
+            'user_agent' => $this->text(256)->notNull(),
             'ip' => $this->string(39)->notNull(),
             'created_at' => $this->timestamp()->notNull()->defaultExpression('now()'),
             'updated_at' => $this->timestamp()->notNull()->defaultExpression('now()'),
@@ -25,7 +25,7 @@ class M181121080429CreateUserDeviceTable extends Migration
 
         $this->createIndex('user_device_unique', 'user_device', [
             'user_id',
-            'user_agent',
+            $this->db->getDriverName() === 'mysql' ? 'user_agent(256)' : 'user_agent',
             'ip',
         ]);
     }

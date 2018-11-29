@@ -1,0 +1,36 @@
+language: php
+
+services:
+    - postgresql
+    - mysql
+
+php:
+    - 7.2
+    - 7.3
+
+env:
+    - DB_TYPE=pgsql
+      DB_HOST=localhost
+      DB_NAME=userdevice
+      DB_PORT=5432
+      DB_USERNAME=postgres
+      DB_PASSWORD=root
+    - DB_TYPE=mysql
+      DB_HOST=127.0.0.1
+      DB_NAME=userdevice
+      DB_PORT=3306
+      DB_USERNAME=root
+      DB_PASSWORD=
+
+before_script:
+    - travis_retry composer self-update
+    - travis_retry composer install --no-interaction --prefer-source
+    - sh -c "if [ '$DB_TYPE' = 'pgsql' ]; then psql -c 'CREATE DATABASE userdevice;' -U postgres; fi"
+    - sh -c "if [ '$DB_TYPE' = 'mysql' ]; then mysql -e 'CREATE DATABASE IF NOT EXISTS userdevice;'; fi"
+
+script:
+    - travis_retry composer lint
+    - travis_retry composer cover
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
