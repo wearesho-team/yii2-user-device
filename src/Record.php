@@ -2,14 +2,10 @@
 
 namespace Wearesho\Yii\UserDevice;
 
-use Carbon\Carbon;
+use Horat1us\Yii\CarbonBehavior;
 use yii\db;
-use yii\behaviors;
 
 /**
- * Class Record
- * @package Wearesho\Yii\UserDevice
- *
  * @property string $id [integer]
  * @property string $user_id [integer]
  * @property string $user_agent
@@ -28,10 +24,7 @@ class Record extends db\ActiveRecord
     {
         return [
             'ts' => [
-                'class' => behaviors\TimestampBehavior::class,
-                'value' => function (): string {
-                    return Carbon::now()->toDateTimeString();
-                },
+                'class' => CarbonBehavior::class,
             ],
         ];
     }

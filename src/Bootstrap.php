@@ -5,30 +5,16 @@ namespace Wearesho\Yii\UserDevice;
 use yii\base;
 use yii\console;
 use yii\web;
-use Horat1us\Yii\Traits\BootstrapMigrations;
 
-/**
- * Class Bootstrap
- * @package Wearesho\Yii\UserDevice
- */
-class Bootstrap extends base\BaseObject implements base\BootstrapInterface
+class Bootstrap implements base\BootstrapInterface
 {
-    use BootstrapMigrations;
-
-    /**
-     * @param base\Application $app
-     */
-    public function bootstrap($app)
+    public function bootstrap($app): void
     {
-        \Yii::setAlias('Wearesho/Yii/UserDevice', '@vendor/wearesho-team/yii2-user-device/src');
-
-        switch (get_class($app)) {
-            case console\Application::class:
-                /** @noinspection PhpParamsInspection */
-                $this->appendMigrations($app, 'Wearesho\\Yii\\UserDevice\\Migrations');
-                return;
-            case web\Application::class:
-                $app->attachBehavior('user-device', Behavior::class);
+        if ($app instanceof console\Application) {
+            $bootstrap = new Migrations\Bootstrap;
+            $bootstrap->bootstrap($app);
+            return;
         }
+        $app->attachBehavior('user-device', Behavior::class);
     }
 }

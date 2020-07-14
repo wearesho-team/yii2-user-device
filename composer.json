@@ -4,8 +4,9 @@
     "type": "library",
     "require": {
         "php": ">=7.2",
-        "horat1us/yii2-base": "^1.14",
-        "nesbot/carbon": "^1.27",
+        "horat1us/yii2-carbon-behavior": "^1.0",
+        "horat1us/yii2-migration-bootstrap": "^1.1",
+        "nesbot/carbon": "^2.24 || ^1.33",
         "yiisoft/yii2": "^2.0.15.1"
     },
     "require-dev": {
@@ -30,10 +31,7 @@
     ],
     "config": {
         "process-timeout": 1800,
-        "sort-packages": true,
-        "platform": {
-            "php": "7.2"
-        }
+        "sort-packages": true
     },
     "scripts": {
         "lint": "./vendor/bin/phpcs --standard=PSR2 ./src ./tests",

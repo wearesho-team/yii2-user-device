@@ -33,17 +33,17 @@ class BootstrapTest extends UserDevice\Tests\TestCase
     {
         $bootstrap = new UserDevice\Bootstrap();
         $bootstrap->bootstrap($this->app);
-        $this->assertEquals(
-            \Yii::getAlias('@vendor/wearesho-team/yii2-user-device/src'),
-            \Yii::getAlias('@Wearesho/Yii/UserDevice')
+        $this->assertInstanceOf(
+            UserDevice\Behavior::class,
+            $this->app->getBehavior('user-device')
         );
     }
 
-    public function testBootstrapConsoleWeb(): void
+    public function testBootstrapConsole(): void
     {
         $bootstrap = new UserDevice\Bootstrap();
         /** @noinspection PhpUnhandledExceptionInspection */
-        $bootstrap->bootstrap(new \yii\console\Application([
+        $bootstrap->bootstrap($app = new \yii\console\Application([
             'id' => 'yii2-user-device',
             'basePath' => dirname(__DIR__),
             'components' => [
@@ -57,9 +57,6 @@ class BootstrapTest extends UserDevice\Tests\TestCase
                 ],
             ],
         ]));
-        $this->assertEquals(
-            \Yii::getAlias('@vendor/wearesho-team/yii2-user-device/src'),
-            \Yii::getAlias('@Wearesho/Yii/UserDevice')
-        );
+        $this->assertEquals('Wearesho\Yii\UserDevice\Migrations', $app->controllerMap['migrate']['migrationNamespaces'][0]);
     }
 }
