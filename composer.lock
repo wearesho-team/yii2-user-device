@@ -1182,12 +1182,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Horat1us/yii2-phpunit.git",
-                "reference": "a64ec9a83eb295ddb72aa5688e177405d260d0ee"
+                "reference": "ebc56effb22138f287a906ef600e16787574b779"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Horat1us/yii2-phpunit/zipball/a64ec9a83eb295ddb72aa5688e177405d260d0ee",
-                "reference": "a64ec9a83eb295ddb72aa5688e177405d260d0ee",
+                "url": "https://api.github.com/repos/Horat1us/yii2-phpunit/zipball/ebc56effb22138f287a906ef600e16787574b779",
+                "reference": "ebc56effb22138f287a906ef600e16787574b779",
                 "shasum": ""
             },
             "require": {
@@ -1205,8 +1205,7 @@
                 "files": [
                     "src/environment.php",
                     "src/constants.php",
-                    "src/autoload.php",
-                    "src/aliases.php"
+                    "src/autoload.php"
                 ],
                 "psr-4": {
                     "Horat1us\\Yii\\PHPUnit\\": "src/"
@@ -1226,7 +1225,7 @@
             "support": {
                 "source": "https://github.com/Horat1us/yii2-phpunit/tree/php-8.4"
             },
-            "time": "2026-10-25T20:54:54+00:00"
+            "time": "2026-10-25T21:14:54+00:00"
         },
         {
             "name": "myclabs/deep-copy",
