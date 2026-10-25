@@ -2,27 +2,28 @@
 
 namespace Wearesho\Yii\UserDevice\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Wearesho\Yii\UserDevice;
 use yii\web\User;
 
 /**
  * Class BootstrapTest
  * @package Wearesho\Yii\UserDevice\Tests\Unit
- * @coversDefaultClass \Wearesho\Yii\UserDevice\Bootstrap
  * @internal
  */
+#[CoversClass(UserDevice\Bootstrap::class)]
 class BootstrapTest extends UserDevice\Tests\TestCase
 {
     protected $aliases;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->aliases = \Yii::$aliases;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -57,6 +58,10 @@ class BootstrapTest extends UserDevice\Tests\TestCase
                 ],
             ],
         ]));
-        $this->assertEquals('Wearesho\Yii\UserDevice\Migrations', $app->controllerMap['migrate']['migrationNamespaces'][0]);
+        $app->getErrorHandler()->unregister();
+        $this->assertEquals(
+            'Wearesho\Yii\UserDevice\Migrations',
+            $app->controllerMap['migrate']['migrationNamespaces'][0]
+        );
     }
 }

@@ -2,16 +2,17 @@
 
 namespace Wearesho\Yii\UserDevice\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use Horat1us\Yii\PHPUnit\TestLogger;
 use Wearesho\Yii\UserDevice;
-use yii\phpunit\TestLogger;
 use yii\web;
 
 /**
  * Class BehaviorTest
  * @package Wearesho\Yii\UserDevice\Tests\Unit
- * @coversDefaultClass \Wearesho\Yii\UserDevice\Behavior
  * @internal
  */
+#[CoversClass(UserDevice\Behavior::class)]
 class BehaviorTest extends UserDevice\Tests\TestCase
 {
     protected const FAKE_IP = '3ffe:1900:4545:3:200:f8ff:fe21:67cf';
@@ -21,7 +22,7 @@ class BehaviorTest extends UserDevice\Tests\TestCase
     /** @var TestLogger */
     protected $testLogger;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -105,7 +106,7 @@ class BehaviorTest extends UserDevice\Tests\TestCase
         $behavior->storeUserDevice();
 
         $this->assertNull($user->id);
-        $this->assertArraySubset(
+        $this->assertEquals(
             [
                 [
                     "User '' logged in from . Session not enabled.",
@@ -118,7 +119,7 @@ class BehaviorTest extends UserDevice\Tests\TestCase
                     "Wearesho\Yii\UserDevice\Behavior"
                 ]
             ],
-            $this->testLogger->log
+            array_slice($this->testLogger->log, 0, 2)
         );
     }
 
@@ -127,10 +128,16 @@ class BehaviorTest extends UserDevice\Tests\TestCase
         $user = $this->createUser();
         $user->trigger(web\Application::EVENT_AFTER_REQUEST);
 
-        $this->assertRegExp("/^User '[0-9]+' logged in from . Session not enabled.$/", $this->testLogger->log[0][0]);
+        $this->assertMatchesRegularExpression(
+            "/^User '[0-9]+' logged in from . Session not enabled.$/",
+            $this->testLogger->log[0][0]
+        );
         $this->assertEquals(4, $this->testLogger->log[0][1]);
         $this->assertEquals("yii\web\User::login", $this->testLogger->log[0][2]);
-        $this->assertRegExp("/^Missing user agent header in request for user [0-9]+$/", $this->testLogger->log[1][0]);
+        $this->assertMatchesRegularExpression(
+            "/^Missing user agent header in request for user [0-9]+$/",
+            $this->testLogger->log[1][0]
+        );
         $this->assertEquals(8, $this->testLogger->log[1][1]);
         $this->assertEquals("Wearesho\Yii\UserDevice\Behavior", $this->testLogger->log[1][2]);
     }
@@ -141,10 +148,13 @@ class BehaviorTest extends UserDevice\Tests\TestCase
         \Yii::$app->request->headers->set('User-Agent', static::FAKE_AGENT);
         $user->trigger(web\Application::EVENT_AFTER_REQUEST);
 
-        $this->assertRegExp("/^User '[0-9]+' logged in from . Session not enabled.$/", $this->testLogger->log[0][0]);
+        $this->assertMatchesRegularExpression(
+            "/^User '[0-9]+' logged in from . Session not enabled.$/",
+            $this->testLogger->log[0][0]
+        );
         $this->assertEquals(4, $this->testLogger->log[0][1]);
         $this->assertEquals("yii\web\User::login", $this->testLogger->log[0][2]);
-        $this->assertRegExp("/^Missing IP info for user [0-9]+$/", $this->testLogger->log[1][0]);
+        $this->assertMatchesRegularExpression("/^Missing IP info for user [0-9]+$/", $this->testLogger->log[1][0]);
         $this->assertEquals(8, $this->testLogger->log[1][1]);
         $this->assertEquals("Wearesho\Yii\UserDevice\Behavior", $this->testLogger->log[1][2]);
     }
@@ -157,13 +167,13 @@ class BehaviorTest extends UserDevice\Tests\TestCase
         $user->trigger(web\Application::EVENT_AFTER_REQUEST);
         $user->trigger(web\Application::EVENT_AFTER_REQUEST);
 
-        $this->assertArraySubset(
+        $this->assertContains(
             [
                 "Skipping updating user info",
                 8,
                 "Wearesho\Yii\UserDevice\Behavior"
             ],
-            $this->testLogger->log[14]
+            $this->testLogger->log
         );
     }
 
