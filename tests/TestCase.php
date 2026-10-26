@@ -2,15 +2,16 @@
 
 namespace Wearesho\Yii\UserDevice\Tests;
 
+use Horat1us\Yii\PHPUnit;
+use Horat1us\Yii\PHPUnit\MigrateFixture;
 use yii\helpers\ArrayHelper;
-use yii\phpunit\MigrateFixture;
 
 /**
  * Class TestCase
  * @package Wearesho\Yii\UserDevice\Tests
  * @internal
  */
-class TestCase extends \yii\phpunit\TestCase
+class TestCase extends PHPUnit\TestCase
 {
     public function globalFixtures(): array
     {

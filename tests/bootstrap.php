@@ -1,7 +1,7 @@
 <?php
 
 if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . '.env')) {
-    $dotEnv = new \Dotenv\Dotenv(dirname(__DIR__));
+    $dotEnv = \Dotenv\Dotenv::createUnsafeImmutable(dirname(__DIR__));
     $dotEnv->load();
 }
 

@@ -2,6 +2,7 @@
 
 namespace Wearesho\Yii\UserDevice\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Wearesho\Yii\UserDevice\Record;
 use Wearesho\Yii\UserDevice\Tests\TestCase;
 use yii\db\BaseActiveRecord;
@@ -9,15 +10,15 @@ use yii\db\BaseActiveRecord;
 /**
  * Class RecordTest
  * @package Wearesho\Yii\UserDevice\Tests\Unit
- * @coversDefaultClass \Wearesho\Yii\UserDevice\Record
  * @internal
  */
+#[CoversClass(Record::class)]
 class RecordTest extends TestCase
 {
     /** @var Record */
     protected $record;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

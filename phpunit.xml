@@ -1,15 +1,20 @@
-<phpunit bootstrap="./tests/autoload.php" backupGlobals="false" colors="true">
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="./tests/autoload.php"
+         backupGlobals="false"
+         colors="true">
     <testsuites>
         <testsuite name="Test Suite">
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist>
+    <source>
+        <include>
             <directory suffix=".php">src</directory>
-        </whitelist>
-        <blacklist>
+        </include>
+        <exclude>
             <directory>src/Migrations</directory>
-        </blacklist>
-    </filter>
+        </exclude>
+    </source>
 </phpunit>
