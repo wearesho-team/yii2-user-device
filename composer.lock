@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7bc353c661efed37a5a4f23d1991a1a",
+    "content-hash": "e01d7930144faed5893a1c0c44a3ecbf",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -1178,16 +1178,16 @@
         },
         {
             "name": "horat1us/yii2-phpunit",
-            "version": "dev-php-8.4",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Horat1us/yii2-phpunit.git",
-                "reference": "ebc56effb22138f287a906ef600e16787574b779"
+                "reference": "949b5cf2496c74df05a254c3220dbca4cff18452"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Horat1us/yii2-phpunit/zipball/ebc56effb22138f287a906ef600e16787574b779",
-                "reference": "ebc56effb22138f287a906ef600e16787574b779",
+                "url": "https://api.github.com/repos/Horat1us/yii2-phpunit/zipball/949b5cf2496c74df05a254c3220dbca4cff18452",
+                "reference": "949b5cf2496c74df05a254c3220dbca4cff18452",
                 "shasum": ""
             },
             "require": {
@@ -1223,9 +1223,9 @@
             ],
             "description": "Yii 2 PHPUnit compatibility layer and enhancements",
             "support": {
-                "source": "https://github.com/Horat1us/yii2-phpunit/tree/php-8.4"
+                "source": "https://github.com/Horat1us/yii2-phpunit/tree/0.1.0"
             },
-            "time": "2026-10-25T21:14:54+00:00"
+            "time": "2026-10-26T11:38:11+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3558,9 +3558,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "horat1us/yii2-phpunit": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
